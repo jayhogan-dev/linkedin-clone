@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { View } from '../../components/Themed';
 import post from '../../../assets/data/posts.json';
 
-const firstPost = post[3];
+const firstPost = post[1];
 
 export default function TabOneScreen() {
   return (
