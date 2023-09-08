@@ -13,4 +13,12 @@ export interface User {
   image?: string;
   backImage?: string;
   about?: string;
+  experience?: Experience[];
+}
+
+export interface Experience {
+  id: string;
+  title: string;
+  companyName: string;
+  companyImage?: string;
 }
