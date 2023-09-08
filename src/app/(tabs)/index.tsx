@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { View } from '../../components/Themed';
 import post from '../../../assets/data/posts.json';
 
-const firstPost = post[1];
+const firstPost = post[0];
 
 export default function TabOneScreen() {
   return (
@@ -16,7 +16,5 @@ export default function TabOneScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });

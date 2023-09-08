@@ -1,13 +1,30 @@
 import { Post } from '@/types';
 import { Text, View, StyleSheet, Image } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 
 interface PostListItemProps {
   post: Post;
 }
 
+interface FooterButtonProps {
+  text: string;
+  icon: React.ComponentProps<typeof FontAwesome>['name'];
+}
+
+const FooterButton = ({ text, icon }: FooterButtonProps) => {
+  return (
+    <View style={{ flexDirection: 'row' }}>
+      <FontAwesome name={icon} size={16} color="gray" />
+      <Text style={{ marginLeft: 5, color: 'gray', fontWeight: '500' }}>
+        {text}
+      </Text>
+    </View>
+  );
+};
+
 export default function PostListItem({ post }: PostListItemProps) {
   return (
-    <View>
+    <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <Image style={styles.userImage} source={{ uri: post.author.image }} />
@@ -18,18 +35,31 @@ export default function PostListItem({ post }: PostListItemProps) {
       </View>
 
       {/* Text Content */}
-      <Text>{post.content}</Text>
+      <Text style={styles.content}>{post.content}</Text>
 
       {/* Image Content */}
-      <Image style={styles.postImage} source={{ uri: post.image }} />
+      {post.image && (
+        <Image style={styles.postImage} source={{ uri: post.image }} />
+      )}
+
+      {/* Footer */}
+      <View style={styles.footer}>
+        <FooterButton text="Like" icon="thumbs-o-up" />
+        <FooterButton text="Comment" icon="comment-o" />
+        <FooterButton text="Share" icon="share" />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
+    padding: 10,
   },
   userName: {
     fontWeight: 'bold',
@@ -42,8 +72,19 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginRight: 10,
   },
+  content: {
+    margin: 10,
+    marginTop: 0,
+  },
   postImage: {
     width: '100%',
     aspectRatio: 1,
+  },
+  footer: {
+    borderTopWidth: 0.5,
+    borderColor: 'lightgray',
+    flexDirection: 'row',
+    paddingVertical: 10,
+    justifyContent: 'space-around',
   },
 });
