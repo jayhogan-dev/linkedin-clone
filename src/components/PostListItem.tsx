@@ -1,6 +1,7 @@
 import { Post } from '@/types';
-import { Text, View, StyleSheet, Image } from 'react-native';
+import { Text, View, StyleSheet, Image, Pressable } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import { Link } from 'expo-router';
 
 interface PostListItemProps {
   post: Post;
@@ -24,37 +25,42 @@ const FooterButton = ({ text, icon }: FooterButtonProps) => {
 
 export default function PostListItem({ post }: PostListItemProps) {
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Image style={styles.userImage} source={{ uri: post.author.image }} />
-        <View>
-          <Text style={styles.userName}>{post.author.name}</Text>
-          <Text>{post.author.position}</Text>
+    <Link href={`/posts/${post.id}`} asChild>
+      <Pressable style={styles.container}>
+        {/* Header */}
+        <View style={styles.header}>
+          <Image style={styles.userImage} source={{ uri: post.author.image }} />
+          <View>
+            <Text style={styles.userName}>{post.author.name}</Text>
+            <Text>{post.author.position}</Text>
+          </View>
         </View>
-      </View>
 
-      {/* Text Content */}
-      <Text style={styles.content}>{post.content}</Text>
+        {/* Text Content */}
+        <Text style={styles.content}>{post.content}</Text>
 
-      {/* Image Content */}
-      {post.image && (
-        <Image style={styles.postImage} source={{ uri: post.image }} />
-      )}
+        {/* Image Content */}
+        {post.image && (
+          <Image style={styles.postImage} source={{ uri: post.image }} />
+        )}
 
-      {/* Footer */}
-      <View style={styles.footer}>
-        <FooterButton text="Like" icon="thumbs-o-up" />
-        <FooterButton text="Comment" icon="comment-o" />
-        <FooterButton text="Share" icon="share" />
-      </View>
-    </View>
+        {/* Footer */}
+        <View style={styles.footer}>
+          <FooterButton text="Like" icon="thumbs-o-up" />
+          <FooterButton text="Comment" icon="comment-o" />
+          <FooterButton text="Share" icon="share" />
+        </View>
+      </Pressable>
+    </Link>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
+    width: '100%',
+    maxWidth: 500,
+    alignSelf: 'center',
   },
   header: {
     flexDirection: 'row',
