@@ -1,11 +1,16 @@
 import { useNavigation, useRouter } from 'expo-router';
 import { useLayoutEffect, useState } from 'react';
-import { StyleSheet, TextInput, Pressable } from 'react-native';
+import { StyleSheet, TextInput, Pressable, Image } from 'react-native';
 
 import { Text, View } from '../../components/Themed';
 
+import * as ImagePicker from 'expo-image-picker';
+import { FontAwesome } from '@expo/vector-icons';
+
 export default function NewPostScreen() {
   const [content, setContent] = useState('');
+  const [image, setImage] = useState<string | null>(null);
+
   const navigation = useNavigation();
   const router = useRouter();
 
@@ -14,6 +19,7 @@ export default function NewPostScreen() {
 
     router.push('/(tabs)');
     setContent('');
+    setImage(null);
   };
 
   useLayoutEffect(() => {
@@ -26,6 +32,21 @@ export default function NewPostScreen() {
     });
   }, [onPost]);
 
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -35,6 +56,14 @@ export default function NewPostScreen() {
         style={styles.input}
         multiline
       />
+
+      {image && <Image source={{ uri: image }} style={styles.image} />}
+
+      <View style={styles.footer}>
+        <Pressable style={styles.iconButton} onPress={pickImage}>
+          <FontAwesome name="image" size={24} color="black" />
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -62,5 +91,20 @@ const styles = StyleSheet.create({
   postButtonText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  image: {
+    width: '100%',
+    aspectRatio: 1,
+    marginTop: 'auto',
+  },
+  footer: {
+    marginTop: 'auto',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  iconButton: {
+    backgroundColor: 'gainsboro',
+    padding: 20,
+    borderRadius: 100,
   },
 });
