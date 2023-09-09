@@ -11,7 +11,7 @@ export interface User {
   name: string;
   position: string;
   image?: string;
-  backImage?: string;
+  backimage?: string;
   about?: string;
   experience?: Experience[];
 }
@@ -19,6 +19,6 @@ export interface User {
 export interface Experience {
   id: string;
   title: string;
-  companyName: string;
-  companyImage?: string;
+  companyname: string;
+  companyimage?: string;
 }

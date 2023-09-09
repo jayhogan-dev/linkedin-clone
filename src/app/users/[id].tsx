@@ -1,8 +1,7 @@
 import ExperienceListItem from '@/components/ExperienceListItem';
 import { User } from '@/types';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
-import { useLayoutEffect } from 'react';
-import { useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import {
   Text,
   View,
@@ -10,12 +9,37 @@ import {
   StyleSheet,
   Pressable,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import userData from '../../../assets/data/user.json';
+import { gql, useQuery } from '@apollo/client';
+
+const query = gql`
+  query MyQuery($id: ID!) {
+    profile(id: $id) {
+      id
+      image
+      name
+      position
+      about
+      experience {
+        id
+        companyimage
+        companyname
+        title
+        userid
+      }
+      backimage
+    }
+  }
+`;
 
 export default function UserProfile() {
-  const [user, setUser] = useState<User>(userData);
   const { id } = useLocalSearchParams();
+
+  const { loading, error, data } = useQuery(query, { variables: { id } });
+  const user = data?.profile;
+
   const navigation = useNavigation();
 
   const onConnect = () => {
@@ -24,15 +48,23 @@ export default function UserProfile() {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: user.name,
+      title: user?.name || 'User',
     });
   }, [user?.name]);
+
+  if (loading) {
+    return <ActivityIndicator />;
+  }
+
+  if (error) {
+    return <Text>Something went wrong</Text>;
+  }
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.header}>
         {/* Background Image */}
-        <Image source={{ uri: user.backImage }} style={styles.backImage} />
+        <Image source={{ uri: user.backimage }} style={styles.backImage} />
         <View style={styles.headerContent}>
           {/* Profile Image */}
           <Image source={{ uri: user.image }} style={styles.profileImage} />
