@@ -1,6 +1,5 @@
 import PostListItem from '@/components/PostListItem';
 import { ActivityIndicator, FlatList, Text } from 'react-native';
-// import posts from '../../../assets/data/posts.json';
 import { gql, useQuery } from '@apollo/client';
 
 const postList = gql`
