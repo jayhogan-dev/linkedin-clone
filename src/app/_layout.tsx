@@ -10,6 +10,11 @@ import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { ApolloProvider } from '@apollo/client';
 import client from '@/apollo/Client';
+import { ClerkProvider, SignedIn, SignedOut } from '@clerk/clerk-expo';
+import AuthScreen from '@/components/auth/AuthScreen';
+
+const CLERK_PUBLISHABLE_KEY =
+  process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -52,14 +57,23 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <ApolloProvider client={client}>
-      <ThemeProvider value={colorScheme === 'light' ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-          <Stack.Screen name="posts/[id]" options={{ title: 'Post' }} />
-        </Stack>
-      </ThemeProvider>
-    </ApolloProvider>
+    <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
+      <ApolloProvider client={client}>
+        <ThemeProvider
+          value={colorScheme === 'light' ? DarkTheme : DefaultTheme}
+        >
+          <SignedIn>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+              <Stack.Screen name="posts/[id]" options={{ title: 'Post' }} />
+            </Stack>
+          </SignedIn>
+          <SignedOut>
+            <AuthScreen />
+          </SignedOut>
+        </ThemeProvider>
+      </ApolloProvider>
+    </ClerkProvider>
   );
 }
